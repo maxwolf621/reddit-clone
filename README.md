@@ -28,8 +28,8 @@ mvn javadocLjavadoc
 - [Common Application Properties](https://docs.spring.io/spring-boot/docs/current/reference/html/application-properties.html)
 
 #### Database
-[`blob` data type example](https://stackoverflow.com/questions/57268541/how-to-stream-large-blob-from-database-to-application-using-jpa)
-[How to use OrderBy with findAll in Spring Data](https://stackoverflow.com/questions/25486583/how-to-use-orderby-with-findall-in-spring-data)   
-[Schema fo like,post,user](https://stackoverflow.com/questions/48160665/implementing-posts-comments-and-likes-in-db)  
-[Query efficiency Discussion](https://www.reddit.com/r/PHP/comments/2hdbps/what_would_be_an_efficient_way_of_loading_from_a/)  
-[Many To Many Database design](https://hackmd.io/@OceanChiu/ryM5xipxI)
+- [`blob` data type example](https://stackoverflow.com/questions/57268541/how-to-stream-large-blob-from-database-to-application-using-jpa)
+- [How to use OrderBy with findAll in Spring Data](https://stackoverflow.com/questions/25486583/how-to-use-orderby-with-findall-in-spring-data)   
+- [Schema fo like,post,user](https://stackoverflow.com/questions/48160665/implementing-posts-comments-and-likes-in-db)  
+- [Query efficiency Discussion](https://www.reddit.com/r/PHP/comments/2hdbps/what_would_be_an_efficient_way_of_loading_from_a/)  
+- [Many To Many Database design](https://hackmd.io/@OceanChiu/ryM5xipxI)
