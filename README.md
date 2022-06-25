@@ -12,7 +12,7 @@
 ## Swagger-ui And Javadoc
 
 Using Swagger-ui `http://localhost:8080/swagger-ui/` to test the Backend 
-![image=1](images/bafd4f766f44c056785c1d3e515c55f500f49bec301a99fe68445f6a9487687f.png)    
+![image](https://user-images.githubusercontent.com/68631186/175774292-46b0c74a-3c9e-4e5e-b58b-0f957014856a.png)
 
 Generate Javadoc for more details
 ```console
