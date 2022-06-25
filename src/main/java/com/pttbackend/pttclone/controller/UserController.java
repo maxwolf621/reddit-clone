@@ -1,0 +1,105 @@
+package com.pttbackend.pttclone.controller;
+
+import com.pttbackend.pttclone.dto.UpdatePasswordDTO;
+import com.pttbackend.pttclone.dto.UserDTO;
+import com.pttbackend.pttclone.interfaces.StorageService;
+import com.pttbackend.pttclone.service.UserService;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+
+
+/**
+ * To Controlled the user Information
+ * @see <a href="https://spring.io/guides/gs/uploading-files/"> Spring file-uploading </a>
+ * @see <a href="https://www.baeldung.com/spring-multipartfile-to-file"> MultipartFile </a>
+ */
+@RestController
+@AllArgsConstructor
+@RequestMapping("/api/userprofile")
+@Slf4j
+public class UserController {
+
+    private final StorageService storageService;
+    private final UserService userService;
+
+    
+    /**
+     * display User information on Frontend
+     * @return {@code UserDTO}
+     */
+    @GetMapping("/account")
+    public ResponseEntity<UserDTO> getUserProfile(){
+        log.info("Show Up User Profile");
+        return ResponseEntity.status(HttpStatus.OK).body(userService.getUserProfile());
+    }
+    
+    /**
+     * update User's avatar 
+     * @param uploadFileData user's Avatar
+     * @return {@code ResponseEntity<String>} if Update Avatar Successfully
+     * @see <a href="https://www.baeldung.com/spring-data-partial-update"> JPA update </a>
+     * @see <a href="https://stackoverflow.com/questions/39741102/how-to-beautifully-update-a-jpa-entity-in-spring-data">
+     *      reference of update a user </a>
+     * @see <a href="https://newbedev.com/how-do-i-update-an-entity-using-spring-data-jpa">
+     *      Update A Entity </a>
+     * @see <a href="https://www.baeldung.com/spring-data-partial-update">
+     *      DTO Mapping to MODEL </a>
+     */
+    @PostMapping(value = "/updateAvatar")
+    public ResponseEntity<String> updateAvatar(@RequestPart("file") MultipartFile uploadFileData){
+       userService.updateAvatar(uploadFileData);
+        return ResponseEntity.status(HttpStatus.OK).body("Update Avatar Successfully");   
+    }
+
+    /**
+     * update User information
+     * @param userDTO {@link UserDTO}
+     * @return {@code ResponseEntity<String>} if update Account Successfully
+     */
+    @PostMapping(value="/updateAccount")
+    public ResponseEntity<String> updateAccount(@RequestBody UserDTO userDTO){
+        userService.updateAccount(userDTO);
+        return ResponseEntity.status(HttpStatus.OK).body("Update Account Successfully");   
+    }
+
+    /**
+     * upload File
+     * @param file uploaded File data
+     * @return {@code ResponseEntity<String>}
+     */
+    @PostMapping(value ="/updateFile")
+    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file){
+        storageService.store(file);
+
+        return ResponseEntity.status(HttpStatus.OK).body("Upload File Successfully");   
+    }
+    
+    /**
+     * Change Password
+     * @param updatePasswordDTO {@link UpdatePasswordDTO}
+     * @return {@code ResponseEntity<Void>}
+     */
+    @PostMapping(value = "/changePassword")
+    public ResponseEntity<Void> changePassword(@RequestBody UpdatePasswordDTO updatePasswordDTO){
+        
+        if(userService.changePassword(updatePasswordDTO)){
+            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    
+    }
+}
