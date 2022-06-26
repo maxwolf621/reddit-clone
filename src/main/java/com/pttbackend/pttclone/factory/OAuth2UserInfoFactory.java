@@ -10,22 +10,21 @@ import com.pttbackend.pttclone.oauth2userinfo.OAuth2UserInfo;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * <p> Factory Pattern </p>
  * <p> Create A userInfo from Third Party </p>
  */
 @Slf4j
 public class OAuth2UserInfoFactory {
     
     private OAuth2UserInfoFactory(){
-        // not called
+
     }
     
     /**
-     * To get User Info from GITHUB or GOOGLE
-     * @param registrationId provider(e.g. GITHUB, GOOGLE ... etc )'s  name
-     * @param claims attributes from 3rd party resource
+     * Get UserInfo from GITHUB or GOOGLE
+     * @param registrationId : Provider's name (e.g. GITHUB, GOOGLE, etc ...)
+     * @param claims : Attributes from 3rd party resource
      * @return {@code Oauth2UserInfo}
-     * @throws com.pttbackend.pttclone.exceptions.OAuth2UserInfoAuthenticationException registration id is not valid
+     * @throws com.pttbackend.pttclone.exceptions.OAuth2UserInfoAuthenticationException
      */
     public static OAuth2UserInfo getOAuth2UserInfo(String registrationId, Map<String, Object> claims){
         if(registrationId.equalsIgnoreCase(AuthProviderType.GOOGLE.toString())){
