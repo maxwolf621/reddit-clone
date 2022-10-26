@@ -14,10 +14,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 @Repository
 public interface FavoritePostRepository extends JpaRepository<FavoritePost, Long> {
-
+    
     List<FavoritePost> findByUser(User user);
-    
     Optional<FavoritePost> findByUserAndFavPost(User user, Post favPost);
-    
     void deleteByUserAndFavPost(User user,Post favPost);
 }

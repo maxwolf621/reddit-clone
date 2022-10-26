@@ -16,8 +16,6 @@ import javax.persistence.GeneratedValue;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.AUTO;
 
-import javax.persistence.CascadeType;;
-
 @Data
 @Builder
 @AllArgsConstructor

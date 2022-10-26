@@ -12,7 +12,7 @@ import org.springframework.data.redis.connection.lettuce.LettucePoolingClientCon
 import lombok.RequiredArgsConstructor;
 
 /**
- * RedisConfiguration and RedisConnection Factory
+ * RedisConnection Factory
  */
 @Configuration
 @RequiredArgsConstructor 
@@ -24,7 +24,7 @@ class RedisConnectionFactories {
     public LettuceConnectionFactory redisServer1LettuceConnectionFactory(){
         var redisServerConfig = new RedisStandaloneConfiguration();
         
-        // redis database server configuration in java
+        // redis database server configuration
         redisServerConfig.setHostName(redisServer1Property.getHost());
         redisServerConfig.setPort(redisServer1Property.getPort());
         redisServerConfig.setDatabase(redisServer1Property.getDatabase());
@@ -35,7 +35,9 @@ class RedisConnectionFactories {
         poolConfig.setMaxIdle(redisServer1Property.getMaxIdle());
 
         // builder with redis Server Configuration and Pool Configuration
-        var clientConfig = LettucePoolingClientConfiguration.builder().commandTimeout(Duration.ofMillis(100)).poolConfig(poolConfig).build();
+        var clientConfig = LettucePoolingClientConfiguration.builder()
+                                .commandTimeout(Duration.ofMillis(100))
+                                .poolConfig(poolConfig).build();
 
         return new LettuceConnectionFactory(redisServerConfig,clientConfig);
     }

@@ -1,10 +1,11 @@
 package com.pttbackend.pttclone.service;
 
-import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.pttbackend.pttclone.model.Tag;
 import com.pttbackend.pttclone.repository.TagRepository;
+
 
 import org.springframework.stereotype.Service;
 
@@ -17,9 +18,9 @@ import lombok.extern.slf4j.Slf4j;
 public class TagService {
     private final TagRepository tagRepo;
 
-    public List<String> getAlltags(){
+    public Set<String> getAlltags(){
         log.info("get all tags");
-       
-        return tagRepo.findAll().stream().map(Tag::getTagname).collect(Collectors.toList());
+        return tagRepo.findAll().stream().map(Tag::getTagname).collect(Collectors.toSet());
     }
+
 }

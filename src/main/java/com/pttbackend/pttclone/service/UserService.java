@@ -42,7 +42,7 @@ public class UserService {
      * @param oldPasswordEncoded a valid password that authenticated user gives
      * @return {@code Optional<User>} or {@code null} 
      */
-    private Optional<User> checkIfValidOldPassword(final String oldPasswordEncoded){
+    private Optional<User> checkIfValidOldPassword(String oldPasswordEncoded){
         log.info(" Check the old Password that User gave ");
         
         User user = authService.getCurrentUser();
@@ -56,7 +56,7 @@ public class UserService {
      * @param newPassword {@link UpdatePasswordDTO}'s Password
      * @return boolean
      */
-    private boolean saveNewPassword(final User user,final String newPassword){
+    private boolean saveNewPassword(final User user, String newPassword){
         log.info("Saving the new Password");
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepo.save(user);

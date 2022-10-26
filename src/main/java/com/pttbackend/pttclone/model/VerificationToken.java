@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.Instant;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -47,8 +46,6 @@ public class VerificationToken {
 
     /*
     @javax.persistence.Transient
-    public boolean isTokenExpired() {
-        return ! Instant.now().isBefore(expiryDate);
-    }
+    public boolean isTokenExpired() { return ! Instant.now().isBefore(expiryDate);}
     */
 }

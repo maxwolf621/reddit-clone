@@ -37,7 +37,8 @@ public class CookieUtils {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals(cookieName)) {
                     log.info("  '___Get Cookie Name : " + cookieName);
-                    //log.info("      '___Cookie's value :" + cookie.getValue());
+                    
+                    log.info("      '___Cookie's value :" + cookie.getValue());
                     return Optional.of(cookie);
                 }
             }

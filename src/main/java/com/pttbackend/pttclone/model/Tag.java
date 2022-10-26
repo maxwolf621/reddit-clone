@@ -10,9 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -32,15 +29,16 @@ import static javax.persistence.FetchType.LAZY;
 @Table(name ="tag")
 public class Tag {
     
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Exclude
+    @EqualsAndHashCode.Exclude // Reuse the tag for new post
     private Long id;
 
     @Column(name = "tag_name", unique = true)
     private String tagname;
-
-    @EqualsAndHashCode.Exclude
+    
+    @EqualsAndHashCode.Exclude // allow multiple posts use this tag
     @ManyToMany(
         fetch = LAZY,
         mappedBy = "tags"
