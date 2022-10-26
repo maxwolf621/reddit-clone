@@ -5,7 +5,6 @@ import java.util.List;
 import static java.util.stream.Collectors.toList;
 
 import com.pttbackend.pttclone.dto.CommentDTO;
-import com.pttbackend.pttclone.dto.CommentRequest;
 import com.pttbackend.pttclone.mapper.CommentMapper;
 import com.pttbackend.pttclone.model.Comment;
 import com.pttbackend.pttclone.model.Post;
