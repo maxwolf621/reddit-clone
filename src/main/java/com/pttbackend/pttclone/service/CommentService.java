@@ -43,11 +43,10 @@ public class CommentService {
      */
     @Transactional(readOnly = true)
     public List<CommentDTO> getCommentsByPostId(Long postId){
-        Post post = postRepo.findById(postId).orElseThrow(()->new RuntimeException("Post " +postId.toString() + "Not Found"));
-        List<Comment> comments = commentRepo.findByPost(post);
 
-        log.info("return all comments in " + post.getPostname());
-
+        Post post = postRepo.findById(postId).orElseThrow(()->new RuntimeException("Post " +postId.toString() + " Not Found"));
+        //List<Comment> comments = commentRepo.findByPost(post);
+        List<Comment> comments = commentRepo.getCommentsByPost(postId);
         return comments.stream().filter(comment ->comment.getRootComment() == null).map(commentMapper::mapToCommentDTO).collect(toList());
     }
 
@@ -60,10 +59,8 @@ public class CommentService {
     @Transactional(readOnly = true)
     public List<CommentDTO> getCommentsByUser(String username){
         User user = userRepo.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(username));
-        List<Comment> comments = commentRepo.findAllByUser(user);
+        List<Comment> comments = commentRepo.getCommentsByUser(username);
         
-        log.info("return all comments from" + user.getUsername());
-
         return comments.stream().map(commentMapper::mapToCommentDTO).collect(toList());
     }
 
