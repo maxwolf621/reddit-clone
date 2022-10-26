@@ -19,7 +19,7 @@ import static java.util.stream.Collectors.toList;
 /**
  * Comment Mapper
  */
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring",  implementationPackage = "com.pttbackend.pttclone.mapper")
 public interface CommentMapper {
     
     /**

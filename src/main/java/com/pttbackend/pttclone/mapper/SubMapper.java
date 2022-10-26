@@ -6,7 +6,7 @@ import com.pttbackend.pttclone.model.Sub;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring",  implementationPackage = "com.pttbackend.pttclone.mapper")
 public interface SubMapper {
 
     @Mapping(target = "postsCount" , expression = "java(getSize(sub))")

@@ -12,11 +12,10 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
  * @see <a href="https://www.baeldung.com/spring-data-partial-update">
  *      reference </a>
  */
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring",  implementationPackage = "com.pttbackend.pttclone.mapper")
 public interface UserMapper {
 
     UserDTO mapToUserDTO(User user);
-
     /** 
      * update only the modified values via {@code @BeanMapping}
      * @param userDTO {@link UserDTO}

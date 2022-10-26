@@ -9,7 +9,7 @@ import com.pttbackend.pttclone.model.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", implementationPackage = "com.pttbackend.pttclone.mapper" )
 public interface FavoriteListMapper {
     
     @Mapping(target = "favoriteId", ignore = true)

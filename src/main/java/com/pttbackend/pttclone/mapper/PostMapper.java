@@ -3,7 +3,6 @@ package com.pttbackend.pttclone.mapper;
 import com.github.marlonlom.utilities.timeago.TimeAgo;
 import com.pttbackend.pttclone.dto.PostRequest;
 import com.pttbackend.pttclone.dto.PostResponse;
-import com.pttbackend.pttclone.model.FavoritePost;
 import com.pttbackend.pttclone.model.Post;
 import com.pttbackend.pttclone.model.Sub;
 import com.pttbackend.pttclone.model.Tag;
@@ -18,7 +17,6 @@ import com.pttbackend.pttclone.repository.FavoritePostRepository;
 import com.pttbackend.pttclone.repository.TagRepository;
 import com.pttbackend.pttclone.repository.VoteRepository;
 import com.pttbackend.pttclone.service.AuthenticationService;
-import com.pttbackend.pttclone.service.MyFavoriteListService;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -34,7 +32,7 @@ import java.util.Set;
  * Map {@link PostRequest}, {@link Sub}, {@link User} to {@link Post} 
  * Map {@link Post} to {@link PostResponse} 
  */
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring" ,  implementationPackage = "com.pttbackend.pttclone.mapper")
 public abstract class PostMapper {
     
     @Autowired
@@ -78,13 +76,12 @@ public abstract class PostMapper {
     @Mapping(target ="username", source ="user.username")
     @Mapping(target = "commentCount", expression = "java(commentCount(post))")
     @Mapping(target = "duration", expression = "java(getDuration(post))")
-    @Mapping(target = "upVote", expression = "java(isPostUpVoted(post))")
-    @Mapping(target = "downVote", expression = "java(isPostDownVoted(post))")
+    @Mapping(target = "upVote", expression = "java(isPostUpVoted(post))") // for user
+    @Mapping(target = "downVote", expression = "java(isPostDownVoted(post))") // for user
     @Mapping(target = "tagnames", expression="java(tagsToStringList(post.getTags()))")
-    @Mapping(target = "marked" ,expression="java(postMarked(post))")
+    @Mapping(target = "marked" ,expression="java(postMarked(post))") // for user
     public abstract PostResponse mapToPostResponse(Post post);
     
-
     @Mapping(target="id" , ignore = true)
     @Mapping(target="tagname", source="tagname")
     public abstract Tag mapToTag(String tagname);
@@ -96,9 +93,8 @@ public abstract class PostMapper {
     }
 
     Set<String> tagsToStringList(Set<Tag> tags){
-        return tags.stream().map(tag -> tag.getTagname()).collect(toSet());
+        return tags.stream().map(Tag::getTagname).collect(toSet());
     }
-
 
     Integer commentCount(Post post) {
         return commentRepo.findByPost(post).size();
@@ -109,7 +105,6 @@ public abstract class PostMapper {
         return TimeAgo.using(post.getDuration().toEpochMilli());
     }
 
-    
     boolean isPostUpVoted(Post post) {
         return checkVoteType(post, UPVOTE);
     }
@@ -120,10 +115,8 @@ public abstract class PostMapper {
 
     boolean checkVoteType(Post post, VoteType voteType) {
         if (authService.isUserLoggedIn()) {
-            Optional<Vote> voteForPostByUser =
-                    voteRepo.findTopByPostAndUserOrderByVoteIdDesc(post,authService.getCurrentUser());
-            return voteForPostByUser.filter(vote -> vote.getVoteType().equals(voteType))
-                    .isPresent();
+            Optional<Vote> voteForPostByUser = voteRepo.findTopByPostAndUserOrderByVoteIdDesc(post,authService.getCurrentUser());
+            return voteForPostByUser.filter(vote -> vote.getVoteType().equals(voteType)).isPresent();
         }
         return false;
     }
