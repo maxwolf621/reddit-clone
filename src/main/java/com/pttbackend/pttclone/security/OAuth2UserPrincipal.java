@@ -44,9 +44,9 @@ public class OAuth2UserPrincipal implements OAuth2User, Serializable{
 	private final OAuth2UserInfo userInfo;
 
 	/**
-	 * <p> A Custom UserPrinciapl that contains </p>
+	 * <p> A Custom UserPrincipal that contains </p>
 	 * @param authorities role of the User
-	 * @param attributes resoruce from 3rd party application
+	 * @param attributes resource from 3rd party application
 	 * @param nameAttributeKey key : "name" in {@code attributes}
 	 * @param userInfo : see {@link OAuth2UserInfo#OAuth2UserInfo(Map)} 
 	 */
@@ -105,7 +105,7 @@ public class OAuth2UserPrincipal implements OAuth2User, Serializable{
     
 	/** 
 	 * <p> Get the OAuth 2.0 token attributes </p>
-	 * @return {@code Map<String, Object>} attributes provided by 3rd party allication
+	 * @return {@code Map<String, Object>} attributes provided by 3rd party application
 	 */
 	@Override
 	public Map<String, Object> getAttributes() {
@@ -114,7 +114,7 @@ public class OAuth2UserPrincipal implements OAuth2User, Serializable{
 
 	
 	/** 
-	 * <p> Remove the duplicate authorities in Colloection </p>
+	 * <p> Remove the duplicate authorities in Collection </p>
 	 * @param authorities Roles might have duplicates in Collection
 	 * @return {@code Set<GrantedAuthority>}
 	 */

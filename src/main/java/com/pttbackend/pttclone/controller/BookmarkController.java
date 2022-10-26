@@ -8,6 +8,8 @@ import com.pttbackend.pttclone.model.User;
 import com.pttbackend.pttclone.service.AuthenticationService;
 import com.pttbackend.pttclone.service.MyFavoriteListService;
 
+import io.swagger.v3.oas.annotations.Operation;
+
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.HttpStatus.CREATED;
 
@@ -36,11 +38,11 @@ public class BookmarkController {
     private final AuthenticationService authService;
     private final MyFavoriteListService myFavoriteListService;
 
-
     /**
      * Check My Favorite Post List
      * @return {@code List<FavoritePost>}
      */
+    @Operation(summary = "GET ALL THE MARKED POSTS OF THE USER")
     @GetMapping("/getMyFavoritePosts")
     public ResponseEntity<List<PostResponse>> getMyFavoritePosts(){
         log.info("Get User Favorite Posts");
@@ -51,6 +53,7 @@ public class BookmarkController {
      * Check My Favorite Sub list
      * @return {@code List<FavoriteSub>}
      */
+    @Operation(summary = "GET ALL THE MARKED SUBS OF THE USER")
     @GetMapping("/getMyFavoriteSubs")
     public ResponseEntity<List<SubDTO>> getMyFavoriteSubs(){
         log.info("Get User Favorite Subs");
@@ -63,6 +66,7 @@ public class BookmarkController {
      * @param subname {@code Sub#getSubname()}
      * @return {@code ResponseEntity<>(CREATED))}
      */
+    @Operation(summary = "MARK THE SUB")
     @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("/markThisSub/{subname}")
     public ResponseEntity<Void> addSubAsMyFavorite(@PathVariable String subname){
@@ -75,6 +79,7 @@ public class BookmarkController {
      * @param postId {@code Post.getId()}
      * @return {@code ResponseEntity<Void>}
      */
+    @Operation(summary = "MARK THE POST")
     @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("/markThisPost/{postId}")
     public ResponseEntity<Void> addPostAsMyFavorite(@PathVariable Long postId){
@@ -82,6 +87,7 @@ public class BookmarkController {
         return new ResponseEntity<>(CREATED);
     }
 
+    @Operation(summary = "GET MARKED POST OF THE USER")
     @GetMapping("/getMarkedPost/{postId}")
     public ResponseEntity<Void> getMarkedPost(@PathVariable Long postId){
         

@@ -45,7 +45,7 @@ public class RefreshTokenService {
     
     /** 
      * Find The Token stored in RefreshToken Repository
-     * @param token might sotre in {@link RefreshToken}
+     * @param token might store in {@link RefreshToken}
      */
     void validateRefreshToken(String token) {
         RefreshToken refreshToken= refreshTokenRepo.findByToken(token).orElseThrow(

@@ -15,11 +15,8 @@ import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-//import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-//import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
@@ -33,6 +30,8 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * <p> Spring Security Configuration </p>
+ * <p> OAuth2 Configuration </p>
+ * <p> Authentication Configuration </p>
  * @see <a href="https://developer.aliyun.com/article/496751"> Spring security example 1</a>
  * @see <a href="https://www.cnblogs.com/Java-125/p/9012461.html">Spring security example 2</a>
  * @see <a href="https://pjchender.dev/internet/note-oauth2/">Spring security example 3</a>
@@ -54,13 +53,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     private final OAuth2USerAuthenticationFailureHandler oAuth2USerAuthenticationFailureHandler;
     private final CustomOAuth2UserPrincipalService customOAuth2UserPrincipalUserService;
 
-    private final UserDetailsService userdetailsService;
+    private final UserPrincipalService userDetailsService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    /**
-     * <a href="https://stackoverflow.com/questions/37671125/how-to-configure-spring-security-to-allow-swagger-url-to-be-accessed-without-aut">
-     * Paths of Swagger Setting</a>
-     */
     private static final String[] AUTH_WHITELIST = {
         // -- Swagger UI v2
         "/v2/api-docs",
@@ -86,34 +81,42 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     };
 
     /**
-     * <p> To configure our http index/directory </p>
+     * <p> Http Security Configuration</p>
      * <p> cors, session management, csrf </p>
      * <p> exceptionHandling for authenticationEntryPoint </p>
      * <p> Authorization for each page </p>
-     * <p> Oauth2's authorizationEndpoint, redirectionEndpoint, userInfoEndpoint, successHandler and failureHandler </p>
-     * <p> Set up a custom filter via {@code addFilterBefore} for JWT interceptor  </p>
+     * <p> Oauth2's authorizationEndpoint, 
+     *              redirectionEndpoint, 
+     *              userInfoEndpoint, 
+     *              successHandler 
+     *              and failureHandler </p>
+     * <p> Set up a custom filter via 
+     *              {@code addFilterBefore} 
+     * for JWT interceptor  </p>
      * @param http security Our http directory
      */
     @Override
     public void configure(HttpSecurity http) throws Exception{
         http
             .cors()
-                .and()
+            .and()
             .csrf().disable()
             //.formLogin().disable()
             .httpBasic().disable()
-            .exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint())
-                .and()
+            .exceptionHandling()
+                .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+            .and()
             //.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
             .authorizeRequests()
+                // Allow to access without any authentications
                 .antMatchers("/api/auth/**", "/oauth2/**").permitAll()
                 .antMatchers("/api/post","/api/sub", "/api/tag").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/post/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/comment/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/tag/**").permitAll()
                 .antMatchers(AUTH_WHITELIST).permitAll() 
-                .anyRequest().authenticated()
-                .and()
+                //.anyRequest().authenticated()
+            .and()
             .oauth2Login()
                 .authorizationEndpoint()        
                     .baseUri("/oauth2/authorization")
@@ -140,7 +143,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     */
 
     /**
-     * Bean For A Custom Oauth2User Authorization Repository
+     * Custom Oauth2User Authorization Repository
      * @return {@code AuthorizationRequestRepository<OAuth2AuthorizationRequest>}
      */
     @Bean
@@ -149,11 +152,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     }
 
     /**
-     *  <p> Bean For Password Encoder </p>
-     *  <p> This method is used to set up </p>
-     *  <p> {@link AuthenticationManagerBuilder#userDetailsService(UserDetailsService)}
-     *      via {@link BCryptPasswordEncoder#BCryptPasswordEncoder()}
-     *  </p>
      * @return {@code org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder.BCryptPasswordEncoder()}
      */
     @Bean
@@ -176,13 +174,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     /**
      * <strong> Configure custom Authentication Provider </strong>
      * <p> {@link UserPrincipalService} : to load the authentication user </p>
-     * @param buildauthenticationprovider 
+     * @param buildAuthenticationProvider 
      * <pre> AuthenticationManagerBuilder#userDetailsService(UserDetailsService)} // To build a custom User Detail </pre> 
      * <pre> AbstractDaoAuthenticationConfigurer#passwordEncoder(PasswordEncoder) // To build password encoder </pre>
-     * @throws Exception buildauthenticationprovider failed
+     * @throws Exception if buildAuthenticationProvider failed
      */
     @Autowired
-    public void configureCustomProvider(AuthenticationManagerBuilder buildauthenticationprovider) throws Exception{
-        buildauthenticationprovider.userDetailsService(userdetailsService).passwordEncoder(passwordEncoder());
+    public void configureCustomProvider(AuthenticationManagerBuilder buildAuthenticationProvider) throws Exception{
+        buildAuthenticationProvider.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 }

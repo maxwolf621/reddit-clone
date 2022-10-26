@@ -5,8 +5,9 @@ import com.pttbackend.pttclone.dto.UserDTO;
 import com.pttbackend.pttclone.interfaces.StorageService;
 import com.pttbackend.pttclone.service.UserService;
 
+import io.swagger.v3.oas.annotations.Operation;
+
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,13 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-
-
-/**
- * To Controlled the user Information
- * @see <a href="https://spring.io/guides/gs/uploading-files/"> Spring file-uploading </a>
- * @see <a href="https://www.baeldung.com/spring-multipartfile-to-file"> MultipartFile </a>
- */
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/userprofile")
@@ -38,9 +32,10 @@ public class UserController {
 
     
     /**
-     * display User information on Frontend
+     * UserProfile
      * @return {@code UserDTO}
      */
+    @Operation(summary = "GET USER INFORMATION")
     @GetMapping("/account")
     public ResponseEntity<UserDTO> getUserProfile(){
         log.info("Show Up User Profile");
@@ -59,6 +54,7 @@ public class UserController {
      * @see <a href="https://www.baeldung.com/spring-data-partial-update">
      *      DTO Mapping to MODEL </a>
      */
+    @Operation(summary = "UPDATE AVATAR version 2")
     @PostMapping(value = "/updateAvatar")
     public ResponseEntity<String> updateAvatar(@RequestPart("file") MultipartFile uploadFileData){
        userService.updateAvatar(uploadFileData);
@@ -70,6 +66,7 @@ public class UserController {
      * @param userDTO {@link UserDTO}
      * @return {@code ResponseEntity<String>} if update Account Successfully
      */
+    @Operation(summary = "UPDATE USER'S PROFILE")
     @PostMapping(value="/updateAccount")
     public ResponseEntity<String> updateAccount(@RequestBody UserDTO userDTO){
         userService.updateAccount(userDTO);
@@ -81,6 +78,7 @@ public class UserController {
      * @param file uploaded File data
      * @return {@code ResponseEntity<String>}
      */
+    @Operation(summary = "UPDATE AVATAR")
     @PostMapping(value ="/updateFile")
     public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file){
         storageService.store(file);
@@ -93,6 +91,7 @@ public class UserController {
      * @param updatePasswordDTO {@link UpdatePasswordDTO}
      * @return {@code ResponseEntity<Void>}
      */
+    @Operation(summary = "CHANGE USER'S PASSWORD")
     @PostMapping(value = "/changePassword")
     public ResponseEntity<Void> changePassword(@RequestBody UpdatePasswordDTO updatePasswordDTO){
         

@@ -30,8 +30,8 @@ import static java.util.Collections.singletonList;
 
 
 /**
- * @deprecated
- *  1. Log In/Sing Up via third-party applcation
+ * @Deprecated
+ *  1. Log In/Sing Up via third-party application
  *  2. Update User details in Local 
  *  3. Return the authenticated user 
  * */
@@ -42,7 +42,7 @@ public class OAuth2UserPrincipalService extends DefaultOAuth2UserService{
     
     private final UserRepository userRepo;
 
-    // oauthe2userRequest contains clientregistration,token, additional parameter
+    // oAuth2userRequest contains clientRegistration,token, additional parameter
     @Override
     public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {
         /**

@@ -47,7 +47,7 @@ public class CustomOAuth2UserPrincipalService extends DefaultOAuth2UserService {
      * <p> {@code userNameAttributeName} 
      *      is the attribute {@code name} that references the Name or Identifier of the end-user
      *      stored in {@code userAttributes} </p>
-     * <p> {@code authroities} the Role of the User e.g. USER, ADMIN ... </P>
+     * <p> {@code authorities} the Role of the User e.g. USER, ADMIN ... </P>
      * 
      * @see OAuth2UserRequest#getClientRegistration()
      * @see ClientRegistration#getRegistrationId()

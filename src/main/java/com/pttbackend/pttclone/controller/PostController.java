@@ -6,6 +6,9 @@ import com.pttbackend.pttclone.dto.PostResponse;
 import com.pttbackend.pttclone.dto.PostTagDTO;
 import com.pttbackend.pttclone.service.PostService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * <p> Controller For Post to </p>
@@ -30,45 +32,52 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/post")
-@Slf4j
 public class PostController {
     private final PostService postService;
     
+    @Operation(summary = "GET ALL POSTS")
     @GetMapping
     public ResponseEntity<List<PostResponse>> getAllPosts(){
-        log.info("** Get all posts");
         return ResponseEntity.status(HttpStatus.OK).body(postService.getAllPosts());
     }
+
+    @Operation(summary = "GET POST VIA ITS ID")
     @GetMapping("getByPost/{postId}")
-    public ResponseEntity<PostResponse> getPostById(@PathVariable long postId){
-        log.info("** Get post by post id");
+    public ResponseEntity<PostResponse> getPostById(
+        @Parameter(description = "ID of the post")
+        @PathVariable long postId){
         return ResponseEntity.status(HttpStatus.OK).body(postService.getPost(postId));
     }
+
+    @Operation(summary = "GET POSTS OF A SUB")
     @GetMapping("getBySub/{subId}")
-    public ResponseEntity<List<PostResponse>> getPostsBySub(@PathVariable Long subId) {
-        log.info("** Get posts in the Sub");
+    public ResponseEntity<List<PostResponse>> getPostsBySub(
+        @Parameter(description = "ID of the Sub")
+        @PathVariable Long subId) {
         return ResponseEntity.status(HttpStatus.OK).body(postService.getPostsBySubId(subId));
     }
 
+    @Operation(summary = "GET POSTS OF A USER")
     @GetMapping("getByUser/{userName}")
-    public ResponseEntity<List<PostResponse>> getPostsByUsername(@PathVariable String userName) {
-        log.info("** Get posts of username "+ userName);
+    public ResponseEntity<List<PostResponse>> getPostsByUsername(
+        @Parameter(description = "Name of the User")
+        @PathVariable String userName) {
         return ResponseEntity.status(HttpStatus.OK).body(postService.getPostsByUsername(userName));
     }
 
+    @Operation(summary = "CREATE POST")
     @PostMapping
     public ResponseEntity<Void> createPost(@RequestBody PostTagDTO postTagDTO) {
-        log.info("** Saving the post and tags via postService ");
-
-        log.info("post request" + postTagDTO.getPostRequest().toString());
-        log.info("tag names " + postTagDTO.getTagNames().toString());
         postService.save(postTagDTO);
         
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    @Operation(summary = "DELETE A POST")
     @DeleteMapping
-    public ResponseEntity<Void> deletePostById(Long postId){
+    public ResponseEntity<Void> deletePostById(
+        @Parameter(description = "ID of the Post")
+        Long postId){
         postService.deletePostById(postId);
 
         return new ResponseEntity<>(HttpStatus.OK);

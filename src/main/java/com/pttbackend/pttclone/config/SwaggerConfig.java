@@ -5,23 +5,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
-//import io.swagger.models.Tag;
 import springfox.documentation.service.Contact;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
-
-//import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import springfox.documentation.service.ApiInfo;
 
-
-/**
- * The Swagger version : swaggerfox 3.0.0 and Swaggerfox 2.x.x
- */
-//@EnableSwagger2  
 @Configuration
 public class SwaggerConfig implements WebMvcConfigurer {
     
@@ -54,7 +45,7 @@ public class SwaggerConfig implements WebMvcConfigurer {
     public Docket apiDocket(){
         return new Docket(DocumentationType.SWAGGER_2).apiInfo((ApiInfo) getApiInfo()).select()
                  // INDICATE swagger only function api's url in this Control 
-                 // .apis(RequestHandlerSelector.basePackge("com.demo.scanOlnyThis_Controller"))
+                 // .apis(RequestHandlerSelector.basePackge("com.demo.scanOnlyThis_Controller"))
                 .apis(RequestHandlerSelectors.any()) // file(java packages) filter : any
                 .paths(PathSelectors.any()) // API's url path filter: any
                 .build();
@@ -66,8 +57,12 @@ public class SwaggerConfig implements WebMvcConfigurer {
      */
     @Bean
     public Docket apiDocket(){
-        return new Docket(DocumentationType.OAS_30).apiInfo((ApiInfo) getApiInfo()).select()
-                    // file(java packages) filter : any
+        // Swagger 3.0 : OAS_30
+        return new Docket(DocumentationType.OAS_30)
+                    .apiInfo((ApiInfo) getApiInfo())
+                    // to build apiSelector
+                    .select()
+                    // files(java packages) filter : any
                     .apis(RequestHandlerSelectors.any())
                     // API's url path filter: any
                     .paths(PathSelectors.any()) 

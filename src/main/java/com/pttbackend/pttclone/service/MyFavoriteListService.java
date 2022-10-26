@@ -26,8 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -41,7 +39,6 @@ public class MyFavoriteListService {
     private final UserRepository userRepo;
     private final SubRepository subRepo;
     private final PostRepository postRepo;
-
     private final SubMapper subMapper;
     private final PostMapper postMapper;
     private final FavoriteListMapper favoriteListMapper;
@@ -59,7 +56,7 @@ public class MyFavoriteListService {
         
         return favPosts.stream()
                 .map(favPost -> postRepo.findById(favPost.getFavPost().getId()).get()) 
-                .map(postMapper::mapToPostResponse) // map post to post response 
+                .map(postMapper::mapToPostResponse) 
                 .collect(toList());
     }
 

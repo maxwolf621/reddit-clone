@@ -181,11 +181,7 @@ public class AuthenticationService {
     public void resetPassword(UpdatePasswordDTO updatePasswordDTO){
         VerificationToken verificationToken = verificationTokenRepo.findByToken(updatePasswordDTO.getResetPasswordToken())
                                                                    .orElseThrow(() -> new TokenException("Invalid Verification Token"));
-        /*
-        if(verificationToken.isTokenExpired()){
-            throw new TokenException("The Token you gave for reset password has expired ");
-        }
-        */
+
 
         User user = userRepo.findByUsername(verificationToken.getUser().getUsername()).orElseThrow(()-> new UsernameNotFoundException("User Not Found"));
         user.setPassword(this.encodePassword(updatePasswordDTO.getNewPassword()));
@@ -217,12 +213,6 @@ public class AuthenticationService {
      * @param verificationToken {@link VerificationToken}
      */
     private void setUserValid(VerificationToken verificationToken){
-
-        /*
-        if(verificationToken.isTokenExpired()){
-            throw new TokenException("The Token you gave for activate account has expired");
-        }
-        */
 
         String username = verificationToken.getUser().getUsername();
         User user = userRepo.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User NOT Found " + username));
@@ -267,7 +257,7 @@ public class AuthenticationService {
         log.info("**** Refresh Token Process");
         refreshTokenService.validateRefreshToken(refreshTokenRequest.getRefreshToken());
         String jwt = jwtProvider.TokenBuilderByUserName(refreshTokenRequest.getUsername());
-        log.info("--Generate A RefreshToken : " + jwt);
+
         return RefreshTokenResponse.builder()
                                    .token(jwt)
                                    .refreshToken(refreshTokenRequest.getRefreshToken())
@@ -304,7 +294,6 @@ public class AuthenticationService {
      * @return boolean
      */
     public boolean isUserLoggedIn() {
-        //log.info("Check if User is Logged In");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return !(authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated();
     }

@@ -40,7 +40,7 @@ public class OAuth2Service {
 
     /**
      * Create a new user via user information 
-     * from thrid party account e.g. GITHUB ... etc 
+     * from 3rd party account e.g. GITHUB ... etc 
      * @param userInfo containing attributes from third party
      * @return {@link User} 
      */
@@ -68,5 +68,4 @@ public class OAuth2Service {
         existingUser.setUsername(userInfo.getUsername());
         return userRepo.save(existingUser);
     }
-    
 }

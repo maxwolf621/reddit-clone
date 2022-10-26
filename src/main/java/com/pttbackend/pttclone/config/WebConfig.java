@@ -5,10 +5,8 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-
 /**
  * CORS setup
- * @see <a href="https://github.com/maxwolf621/SpringNote/blob/main/SpringBootCORS.md"> Details </a>
  */
 @Configuration
 @EnableWebMvc

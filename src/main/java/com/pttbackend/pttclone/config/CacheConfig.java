@@ -75,9 +75,6 @@ public class CacheConfig extends CachingConfigurerSupport {
     public CacheManager redisServer1CacheManager(@Qualifier("redisServer1ConnectionFactory") RedisConnectionFactory lettuceConnectionFactory){
 
         log.info("---- Redis Cache Manager ----");
-        
-        //RedisSerializationContext.SerializationPair<Object> pair = RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer());
-
         var redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
                 .serializeKeysWith(
                     RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))

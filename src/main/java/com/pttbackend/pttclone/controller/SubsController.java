@@ -4,6 +4,9 @@ import com.pttbackend.pttclone.dto.SubDTO;
 import com.pttbackend.pttclone.model.Sub;
 import com.pttbackend.pttclone.service.SubsService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,9 +39,9 @@ public class SubsController {
      * <p> Get all the sub </p>
      * @return {@code List<SubDTO>}
      */
+    @Operation(summary = "GET ALL SUBS")
     @GetMapping
     public ResponseEntity<List<SubDTO>> getAllSubs(){
-        log.info("'--get All subs");
         return ResponseEntity.status(HttpStatus.OK).body(subsService.getAllSubs());
     }
 
@@ -47,8 +50,11 @@ public class SubsController {
      * @param subId {@link Sub}'s Id
      * @return {@code ResponseEntity<SubDTO>}
      */
+    @Operation(summary = "GET SUB VIA ITS ID")
     @GetMapping("Sub_Id/{subId}")
-    public ResponseEntity<SubDTO> getSub(@PathVariable Long subId){
+    public ResponseEntity<SubDTO> getSub(
+        @Parameter(description = "Sub's sub id")
+        @PathVariable Long subId){
         log.info("'--get sub: "+subId );
         return ResponseEntity.status(HttpStatus.OK).body(subsService.getSubid(subId));
     }
@@ -58,6 +64,7 @@ public class SubsController {
      * @param subdto {@link SubDTO}
      * @return {@code ResponseEntity<SubDTO>}
      */
+    @Operation(summary = "CREATE NEW SUB")
     @PostMapping
     public ResponseEntity<SubDTO> createSub(@RequestBody @Valid SubDTO subdto){
         log.info("Create A sub");
@@ -69,8 +76,11 @@ public class SubsController {
      * @param subname {@link Sub}'s name
      * @return {@code ResponseEntity<SubDTO>}
      */
+    @Operation(summary = "GET SUB VIA ITS NAME")
     @GetMapping("Sub_Name/{subname}")
-    public ResponseEntity<SubDTO> getSub(@PathVariable String subname){
+    public ResponseEntity<SubDTO> getSub(
+        @Parameter(description = "name of Sub")
+        @PathVariable String subname){
         log.info("'--get subname: "+ subname );
         return ResponseEntity.status(HttpStatus.OK).body(subsService.getSubname(subname));
     }
