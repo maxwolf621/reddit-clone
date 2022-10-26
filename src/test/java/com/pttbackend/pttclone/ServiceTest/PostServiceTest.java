@@ -1,13 +1,11 @@
 package com.pttbackend.pttclone.ServiceTest;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.List;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +47,6 @@ public class PostServiceTest {
     public void getPostByName(){
         long l = 87;
         Post p = postRepo.getPostById(l).get();
-        System.out.println(p.getPostname());
         assertNotNull(p);
     }
 

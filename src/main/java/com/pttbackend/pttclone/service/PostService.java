@@ -68,7 +68,7 @@ public class PostService {
     @Transactional(readOnly = true)
     public PostResponse getPost(long postId){
 
-        //String key = Long.toString(postId);
+        String key = Long.toString(postId);
 
         /** 
         if(Boolean.TRUE.equals(redisTemplate.hasKey(key))){
@@ -79,7 +79,9 @@ public class PostService {
         Post post = postRepo.findById(postId).orElseThrow(() -> new RuntimeException("Post Not Found"));
 
         PostResponse postResponse = this.postMapper.mapToPostResponse(post);
-        //redisTemplate.opsForValue().set(key, postResponse);
+        
+        // redisTemplate.opsForValue().set(key, postResponse);
+        
         return postResponse;
     }
 
@@ -93,12 +95,13 @@ public class PostService {
     public void save(PostTagDTO postTagDTO) {
         
         SetOperations<String, Object> opsForSet = redisTemplate.opsForSet();
+
         Sub sub = subRepo.findBySubname(postTagDTO.getPostRequest().getSubname()).orElseThrow(() -> new RuntimeException("Post Can Not Be Created"));
     
         // Map PostDTO.tags to Tag type
         Set<Tag> tags = postTagDTO.getTagNames().stream().map(postMapper::mapToTag).collect(toSet());
 
-        // Check if duplicates exist
+        // Duplicates 
         postTagDTO.getTagNames().stream().forEach(
             tagname ->{
                 tagRepo.findByTagname(tagname).ifPresent(
@@ -113,7 +116,11 @@ public class PostService {
             }
         );
 
-        postRepo.save(postMapper.mapToPost(postTagDTO.getPostRequest(), tags, sub, authService.getCurrentUser()));
+        postRepo.save(postMapper.mapToPost(
+            postTagDTO.getPostRequest(), 
+            tags, 
+            sub,
+            authService.getCurrentUser()));
         opsForSet.add("tags", tagRepo.findAll());
     }
 
@@ -126,9 +133,9 @@ public class PostService {
     //@Cacheable(key = "#subId")
     public List<PostResponse> getPostsBySubId(Long subId){
 
-        Sub sub = subRepo.findById(subId).orElseThrow(() ->new RuntimeException("Sub Not Found"));    
+        subRepo.findById(subId).orElseThrow(() ->new RuntimeException("Sub Not Found"));    
 
-        // List<Post> posts = postRepo.findAllBySub(sub);
+        //List<Post> posts = postRepo.findAllBySub(sub);
         
         List<Post> posts = postRepo.getPostBySubId(subId);
 
