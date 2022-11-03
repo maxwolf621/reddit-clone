@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
  * Configure StringTemplate and RedisTemplate
  */
 @Configuration
-@RequiredArgsConstructor
 public class RedisTemplateConfiguration {
 
     @Bean(name = "redisServer1StringRedisTemplate")
@@ -26,13 +25,13 @@ public class RedisTemplateConfiguration {
     }
 
     @Bean(name = "redisServer1RedisTemplate")
-    public <T> RedisTemplate<String , T> redisServer1RedisTemplate(
-        @Qualifier("redisServer1ConnectionFactory") RedisConnectionFactory lettuceConnectionFactory )
+    public <K,T> RedisTemplate<K , T> redisServer1RedisTemplate(
+        @Qualifier("redisServer1ConnectionFactory") RedisConnectionFactory lettuceConnectionFactory)
     {
-        var redisTemplate = new RedisTemplate<String, T >();
-
+    
+        var redisTemplate = new RedisTemplate<K, T >();
         redisTemplate.setConnectionFactory(lettuceConnectionFactory);
-        
+    
         this.setSerializer(redisTemplate);
 
         redisTemplate.afterPropertiesSet();
@@ -43,10 +42,10 @@ public class RedisTemplateConfiguration {
 
     /**
      * de / serializer for key value pair
-     * @param <T>
+     * @param <K, T>
      * @param redisTemplate
      */
-    private <T> void setSerializer(RedisTemplate<String, T> redisTemplate) {
+    private <K,T> void setSerializer(RedisTemplate<K, T> redisTemplate) {
         redisTemplate.setDefaultSerializer(new GenericJackson2JsonRedisSerializer());
         
         // Key
