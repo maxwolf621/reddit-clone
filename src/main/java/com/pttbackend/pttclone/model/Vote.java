@@ -14,6 +14,7 @@ import static javax.persistence.GenerationType.AUTO;
  * Record vote(Vote Type) for a certain post by a certain user
  * <pre> Vote(Long voteId, VoteType voteType, Post post, User user) </pre>
  */
+@Deprecated
 @Data
 @Builder
 @AllArgsConstructor
@@ -30,17 +31,11 @@ public class Vote {
     @Column(name = "vote_type")
     private VoteType voteType;
     
-    /**
-     * vote for which post 
-     */
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "post_id")
+    @JoinColumn(name = "post_id", nullable = false)
     private Post post;
-    
-    /**
-     * who votes
-     */
+
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 }
