@@ -3,11 +3,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import io.swagger.v3.oas.annotations.Operation;
+// import io.swagger.annotations.ApiOperation;
+// import io.swagger.annotations.ApiParam;
+// import io.swagger.annotations.ApiResponse;
+// import io.swagger.annotations.ApiResponses;
+// import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -46,14 +46,12 @@ public class AuthenticationController {
      * @param req : {@link RegisterRequest}
      * @return {@code ResponseEntity<>("Upon Successful Registration",HttpStatus.OK)}
      */
-    @ApiOperation(
-        value = "REGISTRATION",
-        notes = "https://mailtrap.io/signin")
-    @ApiResponses(value = 
-        {@ApiResponse(code = 500,message = "Duplicate Email")}
-    )
+    //@ApiOperation(
+    //    value = "REGISTRATION",
+    //    notes = "https://mailtrap.io/signin")
+    //@ApiResponses(value = {@ApiResponse(code = 500,message = "Duplicate Email")})
     @PostMapping(value="/signup")
-    public ResponseEntity<String> signup(@ApiParam(value = "DTO") @RequestBody RegisterRequest req) {
+    public ResponseEntity<String> signup(/** @ApiParam(value = "DTO") **/ @RequestBody RegisterRequest req) {
         authService.signup(req);
         return new ResponseEntity<>("Upon Successful Registration",HttpStatus.OK);
     }
@@ -63,9 +61,8 @@ public class AuthenticationController {
      * @param token : A token provided by user for backend to verify this token 
      * @return {@code ResponseEntity<>("Token Legitimate",HttpStatus.OK)}
      */
-    @ApiOperation(value = "ACTIVATE A NEW USER")
-    @ApiResponses(
-        {@ApiResponse(code = 500, message = "Illegitimate Token")})
+    //@ApiOperation(value = "ACTIVATE A NEW USER")
+    //@ApiResponses({@ApiResponse(code = 500, message = "Illegitimate Token")})
     @GetMapping(value="/accountVerification/")
     public ResponseEntity<String> activeUserAccount(@RequestParam("token") String token){
         
@@ -80,7 +77,7 @@ public class AuthenticationController {
      * @param user {@link UserDTO}
      * @return {@code ResponseEntity<>("Mail has been sent",HttpStatus.OK)}
      */
-    @Operation(summary = "FORGET PASSWORD PROCESS")
+    //@Operation(summary = "FORGET PASSWORD PROCESS")
     @PostMapping("/forgetPassword")
     public ResponseEntity<String> sendResetPasswordToken(@RequestBody UserDTO user){
         
@@ -94,7 +91,7 @@ public class AuthenticationController {
      * @param updatePasswordDTO {@link UpdatePasswordDTO}
      * @return {@code ResponseEntity<>("Reset Password Successfully",HttpStatus.OK)}
      */
-    @Operation(summary = "RESET USER'S PASSWORD")
+    //@Operation(summary = "RESET USER'S PASSWORD")
     @PostMapping("/resetPassword")
     public ResponseEntity<String> resetPassword(@RequestBody UpdatePasswordDTO updatePasswordDTO){
         authService.resetPassword(updatePasswordDTO);
@@ -106,7 +103,7 @@ public class AuthenticationController {
      * @param loginRequest {@link LoginRequest}
      * @return RefreshTokenResponse to client (Saving new legitimate token in https session)
      */
-    @Operation(summary = "LOGIN PROCESS")
+    //@Operation(summary = "LOGIN PROCESS")
     @PostMapping("/login")
     public RefreshTokenResponse login(@RequestBody LoginRequest loginRequest) {
         log.info(loginRequest.getUsername() + ": Is Logging In ");
@@ -118,7 +115,7 @@ public class AuthenticationController {
      * @param refreshTokenRequest {@link RefreshTokenRequest}
      * @return RefreshTokenResponse to client (Saving new legitimate token in https session)
      */
-    @Operation(summary = "REFRESH TOKEN IF JWT HAS EXPIRED")
+    //@Operation(summary = "REFRESH TOKEN IF JWT HAS EXPIRED")
     @PostMapping("/refreshToken")
     public RefreshTokenResponse refreshTokens(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest) {
         log.info("Token is Expired");
@@ -126,14 +123,14 @@ public class AuthenticationController {
         return authService.refreshToken(refreshTokenRequest);
     }
 
-    @Operation(summary = "LOG OUT")
+    //@Operation(summary = "LOG OUT")
     @PostMapping("/logout")
     public ResponseEntity<String> logout(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest) {
         refreshTokenService.deleteRefreshToken(refreshTokenRequest.getRefreshToken());
         return ResponseEntity.status(HttpStatus.OK).body("Log Out Successfully!!");
     }
 
-    @Operation(summary = "Delete User's Account")
+    //@Operation(summary = "Delete User's Account")
     @PostMapping("/delete_Account")
     public ResponseEntity<String> delete(@RequestBody UserDTO userDTO) {
         authService.deleteUser(userDTO.getMail());
