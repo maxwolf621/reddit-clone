@@ -1,7 +1,6 @@
 package com.pttbackend.pttclone.service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import static java.util.stream.Collectors.toList;
@@ -23,18 +22,14 @@ import com.pttbackend.pttclone.repository.UserRepository;
 
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.SetOperations;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Service
 @AllArgsConstructor 
-@Slf4j
 @CacheConfig(cacheNames = "post")
 public class PostService {
 
@@ -45,9 +40,6 @@ public class PostService {
     private final SubRepository subRepo;
     private final UserRepository userRepo;
     private final TagRepository tagRepo;
-
-
-    private final RedisTemplate<String, Object> redisTemplate;
 
     /**
      * Show all the posts
@@ -67,22 +59,9 @@ public class PostService {
      */
     @Transactional(readOnly = true)
     public PostResponse getPost(long postId){
-
-        String key = Long.toString(postId);
-
-        /** 
-        if(Boolean.TRUE.equals(redisTemplate.hasKey(key))){
-            return (PostResponse) redisTemplate.opsForValue().get(key);
-        }
-        **/
-
         Post post = postRepo.findById(postId).orElseThrow(() -> new RuntimeException("Post Not Found"));
 
-        PostResponse postResponse = this.postMapper.mapToPostResponse(post);
-        
-        // redisTemplate.opsForValue().set(key, postResponse);
-        
-        return postResponse;
+        return this.postMapper.mapToPostResponse(post);
     }
 
     /** 
@@ -94,8 +73,6 @@ public class PostService {
     @Transactional(noRollbackFor = SQLIntegrityConstraintViolationException.class)
     public void save(PostTagDTO postTagDTO) {
         
-        SetOperations<String, Object> opsForSet = redisTemplate.opsForSet();
-
         Sub sub = subRepo.findBySubname(postTagDTO.getPostRequest().getSubname()).orElseThrow(() -> new RuntimeException("Post Can Not Be Created"));
     
         // Map PostDTO.tags to Tag type
@@ -121,7 +98,6 @@ public class PostService {
             tags, 
             sub,
             authService.getCurrentUser()));
-        opsForSet.add("tags", tagRepo.findAll());
     }
 
     /**
@@ -134,8 +110,6 @@ public class PostService {
     public List<PostResponse> getPostsBySubId(Long subId){
 
         subRepo.findById(subId).orElseThrow(() ->new RuntimeException("Sub Not Found"));    
-
-        //List<Post> posts = postRepo.findAllBySub(sub);
         
         List<Post> posts = postRepo.getPostBySubId(subId);
 
@@ -153,25 +127,9 @@ public class PostService {
     //@SuppressWarnings("unchecked")
     public List<PostResponse> getPostsByUsername(String username){
         
-        /* 
-        if(Boolean.TRUE.equals(redisTemplate.hasKey(username))){
-            try {
-                var caches = redisTemplate.opsForList().range(username, 0, -1);
-                return caches.stream()
-                        .filter(PostResponse.class::isInstance)
-                        .map(PostResponse.class::cast).collect(toList());
-            }catch(NullPointerException e)   { 
-                log.info("Caught NullPointerException"); 
-            } 
-        }
-        */
         userRepo.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(username));  
-        // List<Post> posts = postRepo.findByUser(user);
         List<Post> posts = postRepo.getPostsByUserName(username);
-
-        List<PostResponse> postResponses = posts.stream().map(postMapper::mapToPostResponse).collect(toList());
-        // redisTemplate.opsForList().rightPushAll(username, postResponses);
-        return postResponses; 
+        return posts.stream().map(postMapper::mapToPostResponse).collect(toList());
     }
 
     

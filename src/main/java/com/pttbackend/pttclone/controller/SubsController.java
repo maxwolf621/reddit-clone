@@ -4,8 +4,8 @@ import com.pttbackend.pttclone.dto.SubDTO;
 import com.pttbackend.pttclone.model.Sub;
 import com.pttbackend.pttclone.service.SubsService;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
+// import io.swagger.v3.oas.annotations.Operation;
+// import io.swagger.v3.oas.annotations.Parameter;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,11 +23,6 @@ import javax.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * Controller For Subs to 
- * display all, Specific Subs and
- * create Sub by Authenticated User 
- */
 @RestController
 @RequestMapping("/api/sub")
 @AllArgsConstructor
@@ -36,50 +31,40 @@ public class SubsController {
     private final SubsService subsService;
     
     /** 
-     * <p> Get all the sub </p>
      * @return {@code List<SubDTO>}
      */
-    @Operation(summary = "GET ALL SUBS")
+    //@Operation(summary = "GET ALL SUBS")
     @GetMapping
     public ResponseEntity<List<SubDTO>> getAllSubs(){
         return ResponseEntity.status(HttpStatus.OK).body(subsService.getAllSubs());
     }
 
     /**
-     * <p> Get specific sub </p>
      * @param subId {@link Sub}'s Id
      * @return {@code ResponseEntity<SubDTO>}
      */
-    @Operation(summary = "GET SUB VIA ITS ID")
+    //@Operation(summary = "GET SUB VIA ITS ID")
     @GetMapping("Sub_Id/{subId}")
-    public ResponseEntity<SubDTO> getSub(
-        @Parameter(description = "Sub's sub id")
+    public ResponseEntity<SubDTO> getSubById(
         @PathVariable Long subId){
-        log.info("'--get sub: "+subId );
-        return ResponseEntity.status(HttpStatus.OK).body(subsService.getSubid(subId));
+        return ResponseEntity.status(HttpStatus.OK).body(subsService.getSubID(subId));
     }
     
     /** 
-     * <p> Create a sub </p>
-     * @param subdto {@link SubDTO}
+     * @param subDTO {@link SubDTO}
      * @return {@code ResponseEntity<SubDTO>}
      */
-    @Operation(summary = "CREATE NEW SUB")
     @PostMapping
-    public ResponseEntity<SubDTO> createSub(@RequestBody @Valid SubDTO subdto){
-        log.info("Create A sub");
-        return ResponseEntity.status(HttpStatus.CREATED).body(subsService.save(subdto));
+    public ResponseEntity<SubDTO> createSub(@RequestBody @Valid SubDTO subDTO){
+        return ResponseEntity.status(HttpStatus.CREATED).body(subsService.save(subDTO));
     }
 
     /**
-     * get certain sub by subname 
      * @param subname {@link Sub}'s name
      * @return {@code ResponseEntity<SubDTO>}
      */
-    @Operation(summary = "GET SUB VIA ITS NAME")
     @GetMapping("Sub_Name/{subname}")
-    public ResponseEntity<SubDTO> getSub(
-        @Parameter(description = "name of Sub")
+    public ResponseEntity<SubDTO> getSubByName(
         @PathVariable String subname){
         log.info("'--get subname: "+ subname );
         return ResponseEntity.status(HttpStatus.OK).body(subsService.getSubname(subname));
