@@ -11,6 +11,6 @@
 - AOP (logs)
 - Junit5 & Swagger-ui
 
-Swagger-ui `http://localhost:8080/swagger-ui/`
+Swagger-ui `http://localhost:8080/swagger-ui/`   
 ![image1](images/ac6575727d8b2818fe204d537a594fb0c4f13aa5cbad52933ab56be94c2843cc.png)  
 
