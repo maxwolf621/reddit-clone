@@ -15,6 +15,7 @@ import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -115,7 +116,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
                 .antMatchers(HttpMethod.GET, "/api/comment/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/tag/**").permitAll()
                 .antMatchers(AUTH_WHITELIST).permitAll() 
-                //.anyRequest().authenticated()
+                .anyRequest().authenticated()
             .and()
             .oauth2Login()
                 .authorizationEndpoint()        
@@ -134,8 +135,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
         log.info("---------Filter For Local Login");
         http.addFilterBefore(jwtAuthenticationFilter,UsernamePasswordAuthenticationFilter.class);
     }
-
     /** 
+    @Override
+	public void configure(WebSecurity web) throws Exception {
+		web.ignoring().antMatchers( "/swagger-ui.html",
+            "/swagger-ui/**",
+            "/swagger-resources/**",
+            "/v2/api-docs",
+            "/v3/api-docs",
+            "/webjars/**");
+	}
+
     @Override
     public void configure(WebSecurity webSecurity) throws Exception{
     webSecurity.ignoring().antMatchers("/error/**");

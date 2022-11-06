@@ -4,7 +4,7 @@ import java.util.Set;
 
 import com.pttbackend.pttclone.service.TagService;
 
-import io.swagger.v3.oas.annotations.Operation;
+// import io.swagger.v3.oas.annotations.Operation;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +20,7 @@ import lombok.AllArgsConstructor;
 public class TagController {
     private final TagService tagService;
 
-    @Operation(summary = "GET ALL TAGS")
+    // @Operation(summary = "GET ALL TAGS")
     @GetMapping("/getalltags")
     public ResponseEntity<Set<String>> getAllTags(){
         return ResponseEntity.status(HttpStatus.OK).body(tagService.getAlltags());    

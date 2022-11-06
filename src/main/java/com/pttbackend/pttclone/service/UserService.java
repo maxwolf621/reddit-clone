@@ -42,9 +42,7 @@ public class UserService {
      * @param oldPasswordEncoded a valid password that authenticated user gives
      * @return {@code Optional<User>} or {@code null} 
      */
-    private Optional<User> checkIfValidOldPassword(String oldPasswordEncoded){
-        log.info(" Check the old Password that User gave ");
-        
+    private Optional<User> checkIfValidOldPassword(String oldPasswordEncoded){        
         User user = authService.getCurrentUser();
         return passwordEncoder.matches(oldPasswordEncoded,user.getPassword()) ? Optional.of(user) : Optional.empty();
     }
@@ -57,10 +55,8 @@ public class UserService {
      * @return boolean
      */
     private boolean saveNewPassword(final User user, String newPassword){
-        log.info("Saving the new Password");
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepo.save(user);
-        log.info("Change Password Successfully ");
         return true;
     }
 
