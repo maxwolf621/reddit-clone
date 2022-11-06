@@ -26,7 +26,6 @@ import javax.validation.constraints.NotBlank;
 import java.time.Instant;
 import java.util.Set;
 
-import org.hibernate.annotations.Cascade;
 import org.springframework.lang.Nullable;
 
 import static javax.persistence.FetchType.LAZY;
@@ -37,7 +36,7 @@ import static javax.persistence.FetchType.LAZY;
  */
 @Getter @Setter @Builder
 @AllArgsConstructor @NoArgsConstructor
-@EqualsAndHashCode(exclude = {"comments", "tags", "users", "votes"})
+@EqualsAndHashCode(exclude = {"comments", "tags", "users"})
 @Entity @Table(name = "post") 
 public class Post {
 
@@ -82,7 +81,6 @@ public class Post {
     @JoinColumn(name = "sub_id")
     private Sub sub; 
 
-    
     /*    
     @OneToMany(fetch = LAZY,
                cascade = {
