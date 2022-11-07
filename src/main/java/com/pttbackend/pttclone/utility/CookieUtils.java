@@ -21,8 +21,8 @@ import java.util.Optional;
 public class CookieUtils {
 
     /** 
-     * <p> Get the cookie from {@code HttpServletRequest}  
-     *     sent by user agent 
+     * <p> Get specific cookie 
+     *     from {@code HttpServletRequest} sent by user agent 
      *     (e.g Application, Client or Browser ...) </p>
      * @param request {@link HttpServletRequest}
      * @param cookieName {@link Cookie}'s name
@@ -37,22 +37,19 @@ public class CookieUtils {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals(cookieName)) {
                     log.info("  '___Get Cookie Name : " + cookieName);
-                    
-                    log.info("      '___Cookie's value :" + cookie.getValue());
+                    log.info("  '___Cookie's value :" + cookie.getValue());
                     return Optional.of(cookie);
                 }
             }
         }
-        /**
-         * return {@code null} if there is no cookies in {@code HttpServletRequest}
-         */
-        log.info("__There are no cookies in this HttpServletRequest");
+
+        //if there is no cookies in HttpServletRequest
         return Optional.empty();
     }
 
 
     /**
-     *  Set up a cookie and add it in the response payload via
+     * Add new Cookie (response payload)
      * @param response {@link HttpServletResponse}
      * @param cookieName {@link Cookie}'s name
      * @param cookieValue {@link Cookie}'s value
@@ -60,12 +57,17 @@ public class CookieUtils {
      * @see HttpServletResponse#addCookie(Cookie)
      * @see javax.servlet.http.Cookie
      */
-    public static void addCookie(HttpServletResponse response, String cookieName, String cookieValue, int maxAge) {
-        log.info("\n*-----CookieUtils addCookie : " +
-                "\nName: " + cookieName + 
-                "\nCookie Value: " + cookieValue);
+    public static void addCookie(HttpServletResponse response, 
+                                 String cookieName, 
+                                 String cookieValue, 
+                                 int maxAge)
+    {
+        log.info("\n CookieUtils addCookie : " +
+                 "\n  Name: " + cookieName + 
+                 "\n  Cookie Value: " + cookieValue);
 
         Cookie cookie = new Cookie(cookieName, cookieValue);
+        
         cookie.setPath("/");
         cookie.setHttpOnly(true);
         cookie.setMaxAge(maxAge);
@@ -75,7 +77,7 @@ public class CookieUtils {
 
     
     /**
-     * Delete Cookie via
+     * Delete Cookie 
      * @param request {@link HttpServletResponse}
      * @param response {@link HttpServletRequest}
      * @param cookieName Cookie's name
@@ -88,10 +90,9 @@ public class CookieUtils {
         if (cookies != null && cookies.length > 0) {
             for (Cookie cookie: cookies) {
                 /**
-                 *  response Payload will send back to client 
-                 *  {@code cookie.setMaxAge(0)}
-                 *      Once client receives the response. 
-                 *      It deletes the cookie stored in client.
+                 *  response Payload will send back to client.
+                 *  Once client receives the response. 
+                 *  It deletes the cookie stored in client.
                  */
                 if (cookie.getName().equals(cookieName)) {
                     cookie.setValue("");
@@ -104,7 +105,7 @@ public class CookieUtils {
     }
 
     /**
-     * Serialize the data 
+     * Serialize the data and encode it to string base64
      * @param object the object to be serialized
      * @return String of Base64
      * @see SerializationUtils#serialize(Object)
@@ -131,6 +132,10 @@ public class CookieUtils {
      */
     public static <T> T deserialize(Cookie cookie, Class<T> cls) {
         log.info("  *----deserialize data");
-        return cls.cast(SerializationUtils.deserialize(Base64.getUrlDecoder().decode(cookie.getValue())));
+        return cls.cast(SerializationUtils.deserialize(
+                            Base64.getUrlDecoder().decode(
+                                cookie.getValue()
+                            )
+                        ));
     }
 }

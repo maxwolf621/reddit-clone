@@ -21,7 +21,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * <p> If log-in via third party failed then delete the cookies and build a Uri with error information query parameter in it </p>
+ * <p> If log-in via third party failed then delete the cookies 
+ *     and build a Uri with error information and query parameter in it </p>
  * @see CookieUtils#getCookie(HttpServletRequest, String)
  * @see CustomOAuth2AuthorizationRequestRepository#removeAuthorizationRequestCookies(HttpServletRequest, HttpServletResponse)
  * @see org.springframework.web.util.UriComponentsBuilder#fromUriString(String)
@@ -38,23 +39,22 @@ public class OAuth2USerAuthenticationFailureHandler extends SimpleUrlAuthenticat
                                         HttpServletResponse response, 
                                         AuthenticationException exception) 
                                         throws IOException, ServletException {
-        log.info("------------- Failure Handler -------------");
-
-        // get URI from cookie
-        String redirectURI = CookieUtils.getCookie(request, REDIRECT_URI_COOKIE)
-                                      .map(Cookie::getValue)
-                                      .orElse(("/"));
+        // get redirectURI from cookie
+        String redirectURI = CookieUtils
+                                .getCookie(request, REDIRECT_URI_COOKIE)
+                                .map(Cookie::getValue)
+                                .orElse(("/"));
 
         // redirect Uri with `error?=` query parameter in it
-        redirectURI = UriComponentsBuilder.fromUriString(redirectURI)
-                                        .queryParam("error", exception.getLocalizedMessage())
-                                        .build().toUriString();
-                                        
+        redirectURI = UriComponentsBuilder
+                        .fromUriString(redirectURI)
+                        .queryParam("error", exception.getLocalizedMessage())
+                        .build()
+                        .toUriString();
         log.info("______________redirectURI______________: "+redirectURI);
 
         // remove cookies in http session
-        customOAuth2AuthorizationRequestRepo.removeAuthorizationRequestCookies(request, response);
-        
+        customOAuth2AuthorizationRequestRepo.removeAuthorizationRequestCookies(request, response);        
         // redirect to url
         getRedirectStrategy().sendRedirect(request, response, redirectURI);
     }

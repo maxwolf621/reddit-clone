@@ -27,13 +27,10 @@ public class CustomOAuth2AuthorizationRequestRepository implements Authorization
     
     // cookie name
     public static final String AUTHORIZATION_REQUEST_COOKIE = "oauth2_auth_request";
-
     // redirect_uri (after login)
     public static final String REDIRECT_URI_COOKIE = "redirect_uri";
-
     private static final int COOKIE_EXPIRES_SECONDS = 1800;
 
-    
     /**
      * <p> Load Authorization Request <p>
      * @param request Compare the cookie from {@link HttpServletRequest} request with Authorization Provider's cookie 
@@ -44,7 +41,7 @@ public class CustomOAuth2AuthorizationRequestRepository implements Authorization
     @Override
     public OAuth2AuthorizationRequest loadAuthorizationRequest(HttpServletRequest request) {
         log.info("-------------loadAuthorizationRequest from HttpServletRequest-------------");
-        log.info(request.toString());
+        log.info(request.getRequestURL().toString());
 
         Assert.notNull(request, "request cannot be null");
 
@@ -54,9 +51,7 @@ public class CustomOAuth2AuthorizationRequestRepository implements Authorization
     }
 
     /**
-     * <p> Persist(To store) the (serialized) {@code OAuth2AuthorizationRequest} associating it 
-     *     to the provided HttpServletRequest and/or HttpServletResponse.
-     *     (To save AuthorizationRequest's Cookie) in the client's session </p>
+     * <p> saveAuthorizationRequest(cookies) in the client's session</p>
      * @param authorizationRequest {@link OAuth2AuthorizationRequest}
      * @param request {@link HttpServletRequest}
      * @param response {@link HttpServletResponse}
@@ -70,20 +65,24 @@ public class CustomOAuth2AuthorizationRequestRepository implements Authorization
         
         if (authorizationRequest == null) {
             // delete the cookies stored in the client session
-            log.info("** Authorization Request is Null");
             CookieUtils.deleteCookie(request, response, AUTHORIZATION_REQUEST_COOKIE);
             CookieUtils.deleteCookie(request, response, REDIRECT_URI_COOKIE);
             return;
         }   
 
-        
-        log.info("___Add authorization-request cookie (From OAuth2AuthorizationRequest)");
-        CookieUtils.addCookie(response, AUTHORIZATION_REQUEST_COOKIE, CookieUtils.serialize(authorizationRequest), COOKIE_EXPIRES_SECONDS);
+        // add AUTHORIZATION_REQUEST_COOKIE & REDIRECT_URI_COOKIE information to response
+        // the response will be retrieved by client
+        log.info("___Add authorization-request cookie");
+        CookieUtils.addCookie(response, AUTHORIZATION_REQUEST_COOKIE, 
+                              CookieUtils.serialize(authorizationRequest), 
+                              COOKIE_EXPIRES_SECONDS);
         
         String redirectUriAfterLogin = request.getParameter(REDIRECT_URI_COOKIE);        
         if (StringUtils.isNotBlank(redirectUriAfterLogin)) {
-            log.info("___Add redirect_uri Cookie (From Frontend's Request)");
-            CookieUtils.addCookie(response, REDIRECT_URI_COOKIE, redirectUriAfterLogin, COOKIE_EXPIRES_SECONDS);
+            log.info("___Add redirect_uri Cookie");
+            CookieUtils.addCookie(response, REDIRECT_URI_COOKIE, 
+                                  redirectUriAfterLogin, 
+                                  COOKIE_EXPIRES_SECONDS);
         }
 
         log.info("-------------End Of saveAuthorizationRequest-------------");
@@ -91,23 +90,17 @@ public class CustomOAuth2AuthorizationRequestRepository implements Authorization
 
     /** 
      * Used by OAuth2UserLoginAuthentication filter
-     * <p> Load the cookies stored in the http session </p>
-     * <p> delete the cookies in the http session 
-     *     via {@code #removeAuthorizationRequestCookies(HttpServletRequest, HttpServletResponse)} </p>
+     * <p> delete the cookies in the http session via 
+     *     {@code #removeAuthorizationRequestCookies(HttpServletRequest, HttpServletResponse)} </p>
      * @param request {@link HttpServletRequest}
      * @param response {@link HttpServletResponse}
      */
     @Override
     public OAuth2AuthorizationRequest removeAuthorizationRequest(HttpServletRequest request, HttpServletResponse response) {
-        log.info("-------------Start of removeAuthorizationRequest-------------");
-        
-        OAuth2AuthorizationRequest originalRequest = this.loadAuthorizationRequest(request);
-        
-        log.info("-------------End Of removeAuthorizationRequest-------------");
-        return originalRequest;
+        return this.loadAuthorizationRequest(request);
     }
 
-    //@Deprecated
+    @Deprecated
 	@Override
 	public OAuth2AuthorizationRequest removeAuthorizationRequest(HttpServletRequest request) {
 		throw new UnsupportedOperationException("Spring Security shouldn't have called the deprecated removeAuthorizationRequest(request)");

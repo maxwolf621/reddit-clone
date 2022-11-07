@@ -14,8 +14,7 @@ public abstract class OAuth2UserInfo {
     protected Map<String, Object> attributes;
 
     /**
-     * consturctor that stores the attributes/claims
-     * @param attributes from 3rd party account
+     * @param attributes resource from 3rd party account
      */  
     public OAuth2UserInfo( Map<String, Object> attributes) {
         this.attributes = attributes;

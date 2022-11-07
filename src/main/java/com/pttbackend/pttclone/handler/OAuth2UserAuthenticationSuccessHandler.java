@@ -104,9 +104,8 @@ public class OAuth2UserAuthenticationSuccessHandler extends SimpleUrlAuthenticat
         log.info("   '-------Get Mail: " + email);
         
         /**
-         * <p> Because Github doesn't not give away user personal email </p>
-         * <p> via {@code GitHubTemplate} to 
-         *    fetch user's mail </p>
+         * <p> Github does not give away user personal email. </p>
+         * <p> Manually fetch user's mail via {@code GitHubTemplate} </p>
          */
         if(userInfo.getAuthProvider().toString().equalsIgnoreCase(GITHUB)){
             log.info("      '---- fetch github private mail");

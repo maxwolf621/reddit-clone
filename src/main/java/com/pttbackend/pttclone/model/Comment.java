@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 
-import io.swagger.annotations.ApiModelProperty;
+// import io.swagger.annotations.ApiModelProperty;
 
 import java.time.Instant;
 import java.util.List;
@@ -24,24 +24,28 @@ import static javax.persistence.FetchType.LAZY;
 public class Comment {
     
     // columns 
-
-    @ApiModelProperty(value = "comment_id")
+    //@ApiModelProperty(value = "comment_id")
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name="comment_id" , unique = true)
     private Long id;
     
-    @ApiModelProperty(value = "comment_text")
+    //@ApiModelProperty(value = "comment_text")
     @NotEmpty
     @Column(name = "comment_text")
     private String text;
     
     @Column(name = "create_date")
     private Instant duration;
+    
+    // --- associations
+    
+    @OneToMany(
+        fetch = LAZY,
+        mappedBy = "rootComment"
+    )
+    private List<Comment> childComments;
 
-    // fks ---
-
-    @ApiModelProperty(value = "post_id")
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
@@ -53,12 +57,4 @@ public class Comment {
     @ManyToOne(optional = true , fetch = LAZY)
     @JoinColumn(name= "repliedComment_id")
     private Comment rootComment;
-    
-    // -----
-    
-    @OneToMany(
-        fetch = LAZY,
-        mappedBy = "rootComment"
-    )
-    private List<Comment> childComments;
 }

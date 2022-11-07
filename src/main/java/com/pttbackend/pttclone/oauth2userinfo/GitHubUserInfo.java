@@ -49,9 +49,6 @@ import com.pttbackend.pttclone.model.AuthProviderType;
      */
 
 
-/**
- * Store Resource fomr Github
- */
 public class GitHubUserInfo extends OAuth2UserInfo {
 
     
@@ -59,7 +56,7 @@ public class GitHubUserInfo extends OAuth2UserInfo {
         super(claims);
     }
 
-    private final AuthProviderType authProvider = AuthProviderType.GITHUB;
+    private static final AuthProviderType authProvider = AuthProviderType.GITHUB;
 
     /**
      * @return AuthProviderTYpe.GITHUB

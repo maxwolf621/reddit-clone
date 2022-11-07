@@ -37,7 +37,7 @@ public class GoogleUserInfo extends OAuth2UserInfo {
         super(attributes);
     }
 
-    private final AuthProviderType authProvider = AuthProviderType.GOOGLE;
+    private static final AuthProviderType authProvider = AuthProviderType.GOOGLE;
 
     @Override
     public AuthProviderType getAuthProvider(){
