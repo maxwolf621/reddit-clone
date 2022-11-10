@@ -2,28 +2,28 @@ package com.pttbackend.pttclone.service;
 
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 
+import com.pttbackend.pttclone.config.threadpool.AsyncConfiguration;
 import com.pttbackend.pttclone.dto.PostResponse;
 import com.pttbackend.pttclone.dto.PostTagDTO;
 import com.pttbackend.pttclone.mapper.PostMapper;
 import com.pttbackend.pttclone.model.Post;
 import com.pttbackend.pttclone.model.Sub;
 import com.pttbackend.pttclone.model.Tag;
-import com.pttbackend.pttclone.model.User;
 import com.pttbackend.pttclone.repository.PostRepository;
 import com.pttbackend.pttclone.repository.SubRepository;
 import com.pttbackend.pttclone.repository.TagRepository;
-import com.pttbackend.pttclone.repository.UserRepository;
 
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.AllArgsConstructor;
@@ -38,18 +38,18 @@ public class PostService {
 
     private final PostRepository postRepo;
     private final SubRepository subRepo;
-    private final UserRepository userRepo;
     private final TagRepository tagRepo;
 
     /**
      * Show all the posts
      * @return {@code List<PostResponse>}
      */
+    @Async(AsyncConfiguration.TASK_EXECUTOR_SERVICE)
     @Transactional(readOnly = true)
-    public List<PostResponse> getAllPosts(){
-       return postRepo.findAll().stream()
-                      .map(postMapper::mapToPostResponse)
-                      .collect(toList());
+    public CompletableFuture<List<PostResponse>> getAllPosts(){
+       return postRepo.findAllPosts().thenApply(
+        posts -> posts.stream().map(postMapper::mapToPostResponse).collect(toList())
+       );
     }
 
     /**
@@ -118,22 +118,16 @@ public class PostService {
                     .collect(toList());
     }
 
-    /**
-     * Search certain post by {@link User}'s name
-     * @param username {@link User}'s name
-     * @return {@code List<PostResponse>}
-     */
-    @Transactional(readOnly = true)
-    //@SuppressWarnings("unchecked")
-    public List<PostResponse> getPostsByUsername(String username){
-        
-        userRepo.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(username));  
-        List<Post> posts = postRepo.getPostsByUserName(username);
-        return posts.stream().map(postMapper::mapToPostResponse).collect(toList());
-    }
 
-    
     public void deletePostById(Long id){
         postRepo.deleteById(id);
+    }
+
+    @Async(AsyncConfiguration.TASK_EXECUTOR_SERVICE)
+    @org.springframework.transaction.annotation.Transactional(propagation = Propagation.REQUIRES_NEW)
+    public CompletableFuture<List<PostResponse>> findByUser(String username) {
+        return postRepo.findPostsByUserName(username).thenApply(
+            posts -> posts.stream().map(postMapper::mapToPostResponse).collect(toList())
+        );
     }
 }

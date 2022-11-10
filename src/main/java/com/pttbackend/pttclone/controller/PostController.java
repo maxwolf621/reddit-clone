@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * <p> Controller For Post to </p>
@@ -34,28 +35,20 @@ import lombok.AllArgsConstructor;
 @RequestMapping("/api/post")
 public class PostController {
     private final PostService postService;
-    
+
     @GetMapping
     public ResponseEntity<List<PostResponse>> getAllPosts(){
-        return ResponseEntity.status(HttpStatus.OK).body(postService.getAllPosts());
+        return ResponseEntity.status(HttpStatus.OK).body(postService.getAllPosts().join());
     }
 
     @GetMapping("getByPost/{postId}")
-    public ResponseEntity<PostResponse> getPostById(
-        @PathVariable long postId){
+    public ResponseEntity<PostResponse> getPostById(@PathVariable long postId){
         return ResponseEntity.status(HttpStatus.OK).body(postService.getPost(postId));
     }
 
     @GetMapping("getBySub/{subId}")
-    public ResponseEntity<List<PostResponse>> getPostsBySub(
-        @PathVariable Long subId) {
+    public ResponseEntity<List<PostResponse>> getPostsBySub(@PathVariable Long subId) {
         return ResponseEntity.status(HttpStatus.OK).body(postService.getPostsBySubId(subId));
-    }
-
-    @GetMapping("getByUser/{userName}")
-    public ResponseEntity<List<PostResponse>> getPostsByUsername(
-        @PathVariable String userName) {
-        return ResponseEntity.status(HttpStatus.OK).body(postService.getPostsByUsername(userName));
     }
 
     @PostMapping
@@ -68,5 +61,10 @@ public class PostController {
     public ResponseEntity<Void> deletePostById(Long postId){
         postService.deletePostById(postId);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping(value= "postsbyuser/{username}")
+    public ResponseEntity<List<PostResponse>> getPostsByUser(@PathVariable String username){
+        return ResponseEntity.status(HttpStatus.OK).body(postService.findByUser(username).join());
     }
 }
