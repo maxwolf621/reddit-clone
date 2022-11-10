@@ -11,5 +11,5 @@
 - Database : Mysql & Redis
 - Cache : Caffeine 
 - JPA EntityGraph and Query (avoid n+1 query and eager fetching)
-- AOP(logs of logics from difference layer)
+- AOP(logs of logics from different layers)
 - Junit5 & Swagger-ui
