@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 
@@ -19,6 +20,9 @@ import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
+import javax.persistence.NamedEntityGraphs;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
@@ -26,6 +30,7 @@ import javax.validation.constraints.NotBlank;
 import java.time.Instant;
 import java.util.Set;
 
+import org.hibernate.annotations.Proxy;
 import org.springframework.lang.Nullable;
 
 import static javax.persistence.FetchType.LAZY;
@@ -34,10 +39,27 @@ import static javax.persistence.FetchType.LAZY;
  * <p> Post's Entity </p>
  * <p> Do not using {@code @ToString} and {@code @Data} to avoid overflow error </p>
  */
+@NamedEntityGraphs(
+    @NamedEntityGraph(
+        name = "post_sub_user_tags",
+        attributeNodes = {
+            @NamedAttributeNode("id"),
+            @NamedAttributeNode("duration"),
+            @NamedAttributeNode("postname"),
+            @NamedAttributeNode("description"),
+            @NamedAttributeNode("url"),
+            @NamedAttributeNode("user"),
+            @NamedAttributeNode("tags"),
+            //@NamedAttributeNode("comments"),
+            @NamedAttributeNode("sub"),
+            //@NamedAttributeNode("users")
+        }
+    )
+)
 @Getter @Setter @Builder
 @AllArgsConstructor @NoArgsConstructor
-@EqualsAndHashCode(exclude = {"comments", "tags", "users"})
 @Entity @Table(name = "post") 
+@ToString
 public class Post {
 
     // columns 
@@ -66,13 +88,7 @@ public class Post {
     @Column(name = "vote_count")
     private Integer voteCount;
 
-    @Override
-    public String toString(){
-        return "post id: " + id + "\n post name: " + postname + "\n vote count: " + voteCount;
-    }
-
     /** ----   associations ----  */
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id",  referencedColumnName = "user_id")
     private User user;
@@ -121,6 +137,7 @@ public class Post {
         user.getFavPosts().remove(this);
     }
 
+    // tags
     @ManyToMany(
         fetch = LAZY,
         cascade = {
@@ -133,6 +150,12 @@ public class Post {
         inverseJoinColumns = @JoinColumn(name = "ref_tag_id")
     )
     private Set<Tag> tags;
+    public boolean addTags(Tag tag){
+        return this.tags.add(tag) && tag.getPosts().add(this);
+    }
+    public boolean removeTags(Tag tag){
+        return this.tags.remove(tag) && tag.getPosts().remove(this);
+    }
 
     @OneToMany(fetch = LAZY,
         cascade = {
