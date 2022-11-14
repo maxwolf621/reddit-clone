@@ -28,8 +28,9 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
  */
 @EnableOpenApi
 @SpringBootApplication
-@EnableConfigurationProperties({OAuth2Properties.class, 
-								StorageProperties.class})
+@EnableConfigurationProperties({OAuth2Properties.class,  // oauth2 login
+								StorageProperties.class, // avatar
+								}) // dataSource configuration
 @EnableAsync
 @EnableScheduling
 @EnableAspectJAutoProxy
