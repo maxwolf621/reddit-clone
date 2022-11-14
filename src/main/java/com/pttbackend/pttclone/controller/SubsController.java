@@ -4,7 +4,7 @@ import com.pttbackend.pttclone.dto.SubDTO;
 import com.pttbackend.pttclone.model.Sub;
 import com.pttbackend.pttclone.service.SubsService;
 
-// import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Operation;
 // import io.swagger.v3.oas.annotations.Parameter;
 
 import org.springframework.http.HttpStatus;
@@ -28,12 +28,12 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 @Slf4j
 public class SubsController {
-    private final SubsService subsService;
+    private final SubsService subsService;  
     
     /** 
      * @return {@code List<SubDTO>}
      */
-    //@Operation(summary = "GET ALL SUBS")
+    @Operation(summary = "GET ALL SUBS")
     @GetMapping
     public ResponseEntity<List<SubDTO>> getAllSubs(){
         return ResponseEntity.status(HttpStatus.OK).body(subsService.getAllSubs());
@@ -43,8 +43,8 @@ public class SubsController {
      * @param subId {@link Sub}'s Id
      * @return {@code ResponseEntity<SubDTO>}
      */
-    //@Operation(summary = "GET SUB VIA ITS ID")
-    @GetMapping("Sub_Id/{subId}")
+    @Operation(summary = "Get Sub by Sub's ID")
+    @GetMapping("/id/{subId}")
     public ResponseEntity<SubDTO> getSubById(
         @PathVariable Long subId){
         return ResponseEntity.status(HttpStatus.OK).body(subsService.getSubID(subId));
@@ -63,7 +63,7 @@ public class SubsController {
      * @param subname {@link Sub}'s name
      * @return {@code ResponseEntity<SubDTO>}
      */
-    @GetMapping("Sub_Name/{subname}")
+    @GetMapping("/name/{subname}")
     public ResponseEntity<SubDTO> getSubByName(
         @PathVariable String subname){
         log.info("'--get subname: "+ subname );

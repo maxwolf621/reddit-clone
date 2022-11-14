@@ -43,7 +43,7 @@ public class BookmarkController {
      * @return {@code List<FavoritePost>}
      */
     //@Operation(summary = "GET ALL THE MARKED POSTS OF THE USER")
-    @GetMapping("/getMyFavoritePosts")
+    @GetMapping("/myfavposts")
     public ResponseEntity<List<PostResponse>> getMarkPosts(){
         log.info("Get User Favorite Posts");
         return ResponseEntity.status(OK).body(bookmarkService.getMyFavoritePosts(authService.getCurrentUser()));    
@@ -53,7 +53,7 @@ public class BookmarkController {
      * @return {@code List<FavoriteSub>}
      */
     //@Operation(summary = "GET ALL THE MARKED SUBS OF THE USER")
-    @GetMapping("/getMyFavoriteSubs")
+    @GetMapping("/myfavosubs")
     public ResponseEntity<Set<SubDTO>> getMarkSubs(){
         User user = authService.getCurrentUser();
         return ResponseEntity.status(OK).body(bookmarkService.getMyFavoriteSubs(user));    
@@ -65,7 +65,7 @@ public class BookmarkController {
      */
     //@Operation(summary = "MARK THE SUB")
     @CrossOrigin(origins = "http://localhost:4200")
-    @GetMapping("/markThisSub/{subname}")
+    @GetMapping("/sub/{subname}")
     public ResponseEntity<Void> markSubAsMyFavorite(@PathVariable String subname){
         bookmarkService.markSubAsMyFav(subname);
         return new ResponseEntity<>(CREATED);
@@ -84,7 +84,7 @@ public class BookmarkController {
     }
 
     //@Operation(summary = "GET MARKED POST OF THE USER")
-    @GetMapping("/getMarkedPost/{postId}")
+    @GetMapping("/post/{postId}")
     public ResponseEntity<Void> getMarkedPost(@PathVariable Long postId){
         
         if(bookmarkService.getMarkedPost(postId)){

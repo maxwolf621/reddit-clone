@@ -41,12 +41,12 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.OK).body(postService.getAllPosts().join());
     }
 
-    @GetMapping("getByPost/{postId}")
+    @GetMapping("id/{postId}")
     public ResponseEntity<PostResponse> getPostById(@PathVariable long postId){
         return ResponseEntity.status(HttpStatus.OK).body(postService.getPost(postId));
     }
 
-    @GetMapping("getBySub/{subId}")
+    @GetMapping("sub/{subId}")
     public ResponseEntity<List<PostResponse>> getPostsBySub(@PathVariable Long subId) {
         return ResponseEntity.status(HttpStatus.OK).body(postService.getPostsBySubId(subId));
     }
@@ -63,7 +63,7 @@ public class PostController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping(value= "postsbyuser/{username}")
+    @GetMapping(value= "user/{username}")
     public ResponseEntity<List<PostResponse>> getPostsByUser(@PathVariable String username){
         return ResponseEntity.status(HttpStatus.OK).body(postService.findByUser(username).join());
     }
