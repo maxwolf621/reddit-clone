@@ -1,6 +1,5 @@
 package com.pttbackend.pttclone.model;
 
-@Deprecated
 public enum VoteType {
     // to upvote or downvote for the post
     UPVOTE(1), DOWNVOTE(-1);
