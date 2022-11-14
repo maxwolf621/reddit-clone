@@ -1,5 +1,6 @@
 package com.pttbackend.pttclone.repository;
 
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -23,4 +24,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Modifying
     @Query("delete from User u where u.legit = false")
     void deleteIllegitimateUser();
+
+    @EntityGraph(value="user_favPosts", type= EntityGraph.EntityGraphType.LOAD)
+    @Query("Select u from User u Where u.username =?1")
+    User getMyFavPosts(String username);
 }
