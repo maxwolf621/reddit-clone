@@ -28,10 +28,7 @@ public class SubsService {
      */
     @Transactional(readOnly =  true)
     public List<SubDTO> getAllSubs(){
-        return subRepo.findAll()
-               .stream()
-               .map(subMapper::mapToSubDTO)
-               .collect(toList());
+        return subRepo.findAllSubs();
     }
     
     /** 
@@ -40,8 +37,7 @@ public class SubsService {
      */
     @Transactional(readOnly =  true)
     public SubDTO getSubID(long id){
-        Sub sub = subRepo.findById(id).orElseThrow(() -> new RuntimeException("Sub Not Found"));
-        return subMapper.mapToSubDTO(sub);
+        return subRepo.findBySubId(id).orElseThrow(() -> new RuntimeException("Sub Not Found"));
     }
     
     /**
@@ -59,7 +55,6 @@ public class SubsService {
      * @return {@code SubDTO}
      */
     public SubDTO getSubname(String subname){
-        Sub sub = subRepo.findBySubname(subname).orElseThrow(()-> new RuntimeException("Sub :" + subname + "Not Found"));
-        return subMapper.mapToSubDTO(sub);
+        return subRepo.findSubBySubname(subname).orElseThrow(()-> new RuntimeException("Sub :" + subname + "Not Found"));
     }
 }
