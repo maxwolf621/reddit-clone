@@ -7,9 +7,12 @@
 - `@schedule`(delete expired token and invalid user.)
 - `lombok` (reducing Boilerplate code) 
 - `mapstruct` (DTOs and POJO data conversion)
-- `@Async` and `CompletableFuture` Multiple Threads 
-- Database : Mysql & Redis
-- Cache : Caffeine 
-- JPA EntityGraph and Query (avoid n+1 query and eager fetching)
-- AOP(logs of logics from different layers)
-- Junit5 & Swagger-ui
+- Multiple Threads : `@Async` + `CompletableFuture` 
+- Mysql (Master & Slave Read/Write Splitting) with JPA & hikariCP
+- Redis (Redis Cluster)
+- Cache Caffeine 
+- EntityGraph and Query (avoid n+1 query and eager fetching)
+- AOP(logs of logics from different layers + intersection of Slave datasource)
+- Junit5/Mockito
+- API : Swagger-ui
+- ~~GraphQL~~
