@@ -7,6 +7,7 @@ import static java.util.stream.Collectors.toList;
 
 import com.pttbackend.pttclone.dto.PostResponse;
 import com.pttbackend.pttclone.dto.SubDTO;
+import com.pttbackend.pttclone.dto.TestDTO;
 import com.pttbackend.pttclone.mapper.PostMapper;
 import com.pttbackend.pttclone.mapper.SubMapper;
 import com.pttbackend.pttclone.model.Post;
@@ -16,6 +17,7 @@ import com.pttbackend.pttclone.repository.PostRepository;
 import com.pttbackend.pttclone.repository.SubRepository;
 import com.pttbackend.pttclone.repository.UserRepository;
 
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,17 +38,19 @@ public class BookmarkService {
 
     @Transactional(readOnly = true)
     public List<PostResponse> getMyFavoritePosts(User user){
-        return user.getFavPosts().stream().map(postMapper::mapToPostResponse).collect(toList());
+        return userRepo.getMyFavPosts(user.getUsername()).getFavPosts().stream().map(postMapper::mapToPostResponse).collect(toList());
     }
 
     @Transactional(readOnly = true)
-    public Set<SubDTO> getMyFavoriteSubs(User user){        
+    public Set<SubDTO> getMyFavoriteSubs(User user){ 
+        
         return user.getFavSubs().stream().map(subMapper::mapToSubDTO).collect(toSet());
     } 
 
     public void markSubAsMyFav(String subname){
         Sub sub = subRepo.findBySubname(subname).orElseThrow(()-> new RuntimeException("Sub not Found"));
         User user = authService.getCurrentUser();
+        Hibernate.initialize(sub.getAsUserFavSub());
         if(sub.getAsUserFavSub().contains(user)){
             sub.removeUser(user);
         }else{
