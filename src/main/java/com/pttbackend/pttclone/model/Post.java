@@ -30,7 +30,6 @@ import javax.validation.constraints.NotBlank;
 import java.time.Instant;
 import java.util.Set;
 
-import org.hibernate.annotations.Proxy;
 import org.springframework.lang.Nullable;
 
 import static javax.persistence.FetchType.LAZY;
@@ -43,16 +42,16 @@ import static javax.persistence.FetchType.LAZY;
     @NamedEntityGraph(
         name = "post_sub_user_tags",
         attributeNodes = {
-            @NamedAttributeNode("id"),
-            @NamedAttributeNode("duration"),
-            @NamedAttributeNode("postname"),
-            @NamedAttributeNode("description"),
-            @NamedAttributeNode("url"),
+            //@NamedAttributeNode("id"),
+            //@NamedAttributeNode("duration"),
+            //@NamedAttributeNode("postname"),
+            //@NamedAttributeNode("description"),
+            //@NamedAttributeNode("url"),
             @NamedAttributeNode("user"),
             @NamedAttributeNode("tags"),
-            //@NamedAttributeNode("comments"),
+            @NamedAttributeNode("comments"),
             @NamedAttributeNode("sub"),
-            //@NamedAttributeNode("users")
+            @NamedAttributeNode("users")
         }
     )
 )

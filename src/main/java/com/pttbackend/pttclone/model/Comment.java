@@ -55,6 +55,6 @@ public class Comment {
     private User user;
 
     @ManyToOne(optional = true , fetch = LAZY)
-    @JoinColumn(name= "repliedComment_id")
+    @JoinColumn(name= "replied_comment_id")
     private Comment rootComment;
 }

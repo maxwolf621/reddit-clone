@@ -16,14 +16,28 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
 import javax.validation.constraints.NotBlank;
 
 import static javax.persistence.GenerationType.SEQUENCE;
+
 
 @Getter @Setter
 @AllArgsConstructor @NoArgsConstructor
 @EqualsAndHashCode(exclude = "posts")
 @Entity @Table(name = "sub") 
+@NamedEntityGraph(
+    name = "sub-posts",
+    attributeNodes = {
+        @NamedAttributeNode("id"),
+        @NamedAttributeNode("subname"),
+        @NamedAttributeNode("description"),
+        @NamedAttributeNode("createdDate"),
+        @NamedAttributeNode("user"),
+        @NamedAttributeNode("posts")
+    }
+)
 public class Sub {
     @Id
     @GeneratedValue(strategy = SEQUENCE)
@@ -38,15 +52,17 @@ public class Sub {
     @Column(name = "description")
     private String description;
     
-    @Column(name = "createdDate")
+    @Column(name = "created_date")
     private Instant createdDate;
 
     // ---- associations ---
 
+    // creator
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
+    // sub's posts
     @OneToMany(fetch = FetchType.LAZY, 
                mappedBy ="sub",
                cascade = {
@@ -57,6 +73,7 @@ public class Sub {
                orphanRemoval = true)
     private List<Post> posts;
 
+    // as some users' favorite sub
     @ManyToMany(
         fetch = FetchType.LAZY,
         cascade = {
