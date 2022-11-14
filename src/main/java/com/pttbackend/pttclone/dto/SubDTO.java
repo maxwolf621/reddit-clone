@@ -12,5 +12,5 @@ public class SubDTO {
     private Long id;
     private String subname;
     private String description;
-    private Integer postsCount;
+    // private Integer postsCount;
 }
