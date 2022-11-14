@@ -9,35 +9,30 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-import lombok.RequiredArgsConstructor;
-
 /**
  * Configure StringTemplate and RedisTemplate
  */
 @Configuration
 public class RedisTemplateConfiguration {
 
-    @Bean(name = "redisServer1StringRedisTemplate")
+    @Bean(name = "redisServerStringRedisTemplate")
     public StringRedisTemplate redisServer1StringRedisTemplate( 
-        @Qualifier("redisServer1ConnectionFactory") RedisConnectionFactory lettuceConnectionFactory)
+        @Qualifier("redisServerConnectionFactory") RedisConnectionFactory lettuceConnectionFactory)
     {        
         return new StringRedisTemplate(lettuceConnectionFactory);
     }
 
-    @Bean(name = "redisServer1RedisTemplate")
-    public <K,T> RedisTemplate<K , T> redisServer1RedisTemplate(
-        @Qualifier("redisServer1ConnectionFactory") RedisConnectionFactory lettuceConnectionFactory)
+    @Bean(name = "redisServerRedisTemplate")
+    public <K,T> RedisTemplate<K,T> redisServerRedisTemplate(
+        @Qualifier("redisStandAloneServerConnectionFactory")  RedisConnectionFactory lettuceConnectionFactory)
     {
-    
-        var redisTemplate = new RedisTemplate<K, T >();
+        var redisTemplate = new RedisTemplate<K,T>();
         redisTemplate.setConnectionFactory(lettuceConnectionFactory);
     
         this.setSerializer(redisTemplate);
 
         redisTemplate.afterPropertiesSet();
-
         return redisTemplate;
-
     }
 
     /**
@@ -56,4 +51,5 @@ public class RedisTemplateConfiguration {
         redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
         redisTemplate.setHashValueSerializer(new GenericJackson2JsonRedisSerializer());
     }
+
 }
